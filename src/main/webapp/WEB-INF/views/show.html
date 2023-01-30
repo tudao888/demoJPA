@@ -40,15 +40,17 @@
       <img th:src="${blog.getImg()}" width="300" height="200">
       <p th:text="${blog.getCategory().getName()}"></p>
       <p th:text="${blog.getContent()}"></p>
-      <p> <button type="button" class="btn btn-primary">Edit</button>
-      <button type="button" class="btn btn-danger">Delete</button>
+      <p><a th:href="@{/edit/{id} (id = ${blog.id})}" type="button" class="btn btn-primary">Edit</a>
+      <a th:href="@{/delete/{id} (id = ${blog.id})}" type="button" class="btn btn-danger">Delete</a>
       </p>
     </div>
   </div>
 </div>
 
 <div class="jumbotron text-center" style="margin-bottom:0">
-  <p>Footer</p>
+  <button th:if="${blogs.hasPrevious()}"><a th:href="@{/blogs(page=${blogs.number}-1)}">Previus</a></button>
+  <b th:text="${blogs.number} + 1"></b> / <b th:text="${blogs.totalPages}"></b>
+  <button th:if="${blogs.hasNext()}"><a th:href="@{/blogs(page=${blogs.number}+1)}">Next</a></button>
 </div>
 
 </body>
