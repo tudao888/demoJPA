@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/create}" method="post" enctype="multipart/form-data">
+  <table>
+    <tr>
+      <td>Title:</td>
+      <td>
+        <input type="text" name="title" />
+      </td>
+    </tr>
+    <tr>
+      <td>Content:</td>
+      <td><input type="text" name="content" /></td>
+    </tr>
+    <tr>
+      <td>Img:</td>
+      <td><input type="file" name="upImg" /></td>
+    </tr>
+    <tr>
+      <td>Category:</td>
+      <td>
+        <select  name="idCategory" class="btn btn-secondary">
+          <div th:each="b :${category}">
+            <option th:text="${b.name}" th:value="${b.id}"></option>
+          </div>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="submit" value="Create Blog"></td>
+    </tr>
+  </table>
+</form>
+</body>
+</html>
