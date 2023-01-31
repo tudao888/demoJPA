@@ -24,9 +24,9 @@
     <tr>
       <td>Category:</td>
       <td>
-        <select  name="idCategory" class="btn btn-secondary">
-          <div th:each="b :${category}">
-            <option th:text="${b.name}" th:value="${b.id}"></option>
+        <select  name="category" class="btn btn-secondary">
+          <div th:each="c :${categories}">
+            <option th:text="${c.name}" th:value="${c.id}"></option>
           </div>
         </select>
       </td>

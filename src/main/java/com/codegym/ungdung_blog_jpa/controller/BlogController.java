@@ -24,7 +24,7 @@ public class BlogController {
     @Autowired
     CategoryService categoryService;
 
-    @ModelAttribute("category")
+    @ModelAttribute("categories")
     public List<Category> categoryList() {
         return (List<Category>) categoryService.findAll();
     }
@@ -37,15 +37,14 @@ public class BlogController {
     }
 
     @GetMapping("/create")
-    public ModelAndView create(@ModelAttribute("category") Category category) {
-        ModelAndView modelAndView = new ModelAndView("/create");
+    public ModelAndView create() {
+        ModelAndView modelAndView = new ModelAndView("create");
         return modelAndView;
     }
 
     @PostMapping("/create")
-    public ModelAndView save(Blog blog, @Param("idCategory") Integer idCategory, @RequestParam MultipartFile upImg) {
+    public ModelAndView save(Blog blog, @RequestParam MultipartFile upImg) {
         ModelAndView modelAndView;
-        blog.setCategory(categoryService.findById(idCategory).get());
         String nameFile = upImg.getOriginalFilename();
         try {
             FileCopyUtils.copy(upImg.getBytes(), new File("E:\\Module 4\\ungDung_Blog_JPA\\src\\main\\webapp\\WEB-INF\\image/" + nameFile));
@@ -66,25 +65,36 @@ public class BlogController {
     }
 
     @GetMapping("/edit/{id}")
-    public ModelAndView edit(@ModelAttribute("category") Category category, @PathVariable int id){
+    public ModelAndView edit(@PathVariable int id){
         ModelAndView modelAndView = new ModelAndView("edit");
         modelAndView.addObject("blog", blogService.findById(id).get());
         return modelAndView;
     }
 
     @PostMapping("/edit")
-    public ModelAndView update(Blog blog, @RequestParam Integer idCategory, @RequestParam MultipartFile upImg){
-        ModelAndView modelAndView = new ModelAndView("redirect:/blogs");
-        Category category = categoryService.findById(idCategory).get();
-        blog.setCategory(category);
+    public String update(Blog blog, @RequestParam MultipartFile upImg){
         String nameFile = upImg.getOriginalFilename();
-        try {
-            FileCopyUtils.copy(upImg.getBytes(), new File("E:\\Module 4\\ungDung_Blog_JPA\\src\\main\\webapp\\WEB-INF\\image/" + nameFile));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!upImg.isEmpty()) {
+            try {
+                FileCopyUtils.copy(upImg.getBytes(), new File("E:\\Module 4\\ungDung_Blog_JPA\\src\\main\\webapp\\WEB-INF\\image/" + nameFile));
+                blog.setImg("/image/"+ nameFile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        blog.setImg("/image/"+ nameFile);
+        else {
+            blog.setImg(blog.getImg());
+        }
         blogService.save(blog);
+        String id = String.valueOf(blog.getId());
+        return "redirect:/blog/" + id;
+    }
+
+
+    @GetMapping("/blog/{id}")
+    public ModelAndView showBlog(@PathVariable int id) {
+        ModelAndView modelAndView = new ModelAndView("showBlog");
+        modelAndView.addObject("blog", blogService.findById(id).get());
         return modelAndView;
     }
 }

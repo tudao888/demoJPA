@@ -36,13 +36,13 @@
 <div class="container" style="margin-top:30px">
   <div class="row">
     <div class="col-sm-6" th:each="blog: ${blogs}">
-      <h2 th:text="${blog.getTitle()}"></h2>
+      <a th:href="@{/blog/{id} (id = ${blog.id})}"><h2 th:text="${blog.getTitle()}"></h2></a>
       <img th:src="${blog.getImg()}" width="300" height="200">
       <p th:text="${blog.getCategory().getName()}"></p>
-      <p th:text="${blog.getContent()}"></p>
-      <p><a th:href="@{/edit/{id} (id = ${blog.id})}" type="button" class="btn btn-primary">Edit</a>
-      <a th:href="@{/delete/{id} (id = ${blog.id})}" type="button" class="btn btn-danger">Delete</a>
-      </p>
+<!--      <p th:text="${blog.getContent()}"></p>-->
+<!--      <p><a th:href="@{/edit/{id} (id = ${blog.id})}" type="button" class="btn btn-primary">Edit</a>-->
+<!--      <a th:href="@{/delete/{id} (id = ${blog.id})}" type="button" class="btn btn-danger">Delete</a>-->
+<!--      </p>-->
     </div>
   </div>
 </div>

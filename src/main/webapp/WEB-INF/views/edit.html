@@ -20,17 +20,18 @@
             <td><input type="text" name="content" th:value="${blog.getContent()}"/></td>
         </tr>
         <tr>
+            <td><input type="hidden" name="img" th:value="${blog.getImg()}"/></td>
+        </tr>
+        <tr>
             <td>Img:</td>
-            <td><input type="file" name="upImg" th:value="${blog.getImg()}"/></td>
+            <td><input type="file" name="upImg"/></td>
         </tr>
         <tr>
             <td>Category:</td>
             <td>
-                <select name="idCategory" class="btn btn-secondary">
-                    <div th:each="b :${category}">
-                        <option th:text="${b.name}" th:value="${b.id}" th:selected="${blog.getCategory().getId() == b.getId()}"></option>
-                    </div>
-                </select>
+                <select th:field="*{category}">
+                    <option th:each="c : ${categories}" th:value="${c.getId()}" th:text="${c.getName()}"></option>
+                </select><br>
             </td>
         </tr>
         <tr>
