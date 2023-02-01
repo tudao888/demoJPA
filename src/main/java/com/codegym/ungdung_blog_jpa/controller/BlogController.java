@@ -2,8 +2,11 @@ package com.codegym.ungdung_blog_jpa.controller;
 
 import com.codegym.ungdung_blog_jpa.model.Blog;
 import com.codegym.ungdung_blog_jpa.model.Category;
+import com.codegym.ungdung_blog_jpa.model.User;
+import com.codegym.ungdung_blog_jpa.repository.IUserRepo;
 import com.codegym.ungdung_blog_jpa.service.BlogService;
 import com.codegym.ungdung_blog_jpa.service.CategoryService;
+import com.codegym.ungdung_blog_jpa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
@@ -20,9 +23,10 @@ import java.util.List;
 public class BlogController {
     @Autowired
     BlogService blogService;
-
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    private UserService userService;
 
     @ModelAttribute("categories")
     public List<Category> categoryList() {
@@ -97,4 +101,5 @@ public class BlogController {
         modelAndView.addObject("blog", blogService.findById(id).get());
         return modelAndView;
     }
+
 }

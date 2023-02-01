@@ -14,6 +14,7 @@ public class Blog {
     @ManyToOne
     private Category category;
 
+
     public Blog() {
     }
 
