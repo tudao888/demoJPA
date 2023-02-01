@@ -5,6 +5,7 @@ import com.codegym.ungdung_blog_jpa.repository.IUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,4 +32,15 @@ public class UserService {
     public User checkUser(String email, String password) {
     return iUserRepo.checkUser(email, password);
     }
+
+    public boolean checkEmail(String email) {
+        List<User> userList = findAll();
+        for (User u : userList) {
+            if (email.equals(u.getEmail())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

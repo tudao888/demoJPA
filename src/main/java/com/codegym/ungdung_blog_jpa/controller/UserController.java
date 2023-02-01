@@ -2,6 +2,8 @@ package com.codegym.ungdung_blog_jpa.controller;
 
 import com.codegym.ungdung_blog_jpa.model.User;
 import com.codegym.ungdung_blog_jpa.service.UserService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
+import jdk.internal.icu.text.NormalizerBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,17 +28,20 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ModelAndView register(@ModelAttribute User user, @RequestParam MultipartFile upAvatar) {
-        ModelAndView modelAndView = new ModelAndView("redirect:/login");
-        String nameFile = upAvatar.getOriginalFilename();
-        try {
-            FileCopyUtils.copy(upAvatar.getBytes(), new File("E:\\Module 4\\ungDung_Blog_JPA\\src\\main\\webapp\\WEB-INF\\image/" + nameFile));
-        } catch (Exception e) {
-            e.printStackTrace();
+    public String register( @ModelAttribute User user, @RequestParam MultipartFile upAvatar) {
+        if (userService.checkEmail(user.getEmail())) {
+            return "redirect: /register";
+        } else {
+            String nameFile = upAvatar.getOriginalFilename();
+            try {
+                FileCopyUtils.copy(upAvatar.getBytes(), new File("E:\\Module 4\\ungDung_Blog_JPA\\src\\main\\webapp\\WEB-INF\\image/" + nameFile));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            user.setAvatar("/image/"+ nameFile);
+            userService.save(user);
+            return "redirect: /blogs";
         }
-        user.setAvatar("/image/"+ nameFile);
-        userService.save(user);
-        return modelAndView;
     }
 
     @GetMapping("/login")
