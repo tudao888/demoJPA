@@ -8,19 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 
 @Controller
 public class UserController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    HttpSession httpSession;
     @GetMapping("/register")
     public ModelAndView formRegister() {
         ModelAndView modelAndView = new ModelAndView("formRegister");
@@ -28,9 +29,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register( @ModelAttribute User user, @RequestParam MultipartFile upAvatar) {
+    public ModelAndView register(@ModelAttribute User user, @RequestParam MultipartFile upAvatar) {
+        ModelAndView modelAndView1 = new ModelAndView("formRegister");
+        ModelAndView modelAndView2 = new ModelAndView("redirect: /blogs");
+        String message;
         if (userService.checkEmail(user.getEmail())) {
-            return "redirect: /register";
+            message = "Tài khoản email đã tồn tại";
+            modelAndView1.addObject("message", message);
+           return modelAndView1;
         } else {
             String nameFile = upAvatar.getOriginalFilename();
             try {
@@ -40,7 +46,7 @@ public class UserController {
             }
             user.setAvatar("/image/"+ nameFile);
             userService.save(user);
-            return "redirect: /blogs";
+            return modelAndView2;
         }
     }
 
@@ -51,15 +57,25 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login( @RequestParam String email, @RequestParam String password) {
+    public ModelAndView login(@RequestParam String email, @RequestParam String password) {
+        ModelAndView modelAndView1 = new ModelAndView("redirect:/login");
+        ModelAndView modelAndView2 = new ModelAndView("redirect:/blogs");
         User user = userService.checkUser(email,password);
         if (user == null) {
-            return "redirect:/login";
+            return modelAndView1;
         }
         else {
-            return "redirect:/blogs";
+            httpSession.setAttribute("user", user);
+            modelAndView2.addObject("user", user);
+            return modelAndView2;
         }
+    }
 
+    @GetMapping("/showInformation/{id}")
+    public ModelAndView showInformation(@PathVariable int id) {
+        ModelAndView modelAndView = new ModelAndView("showInformation");
+//        modelAndView.addObject("user", userService.findById(id));
+        return modelAndView;
     }
 
 }
